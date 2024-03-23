@@ -1,0 +1,13 @@
+# Ignore les dossiers node_modules générés par npm
+node_modules/
+
+# Ignore les fichiers de verrouillage de package générés par npm
+package-lock.json
+
+# Ignore les fichiers de configuration spécifiques à l'environnement
+.env
+
+# Ignore les fichiers de build frontend générés
+frontend/dist/
+
+
