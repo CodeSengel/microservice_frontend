@@ -214,6 +214,7 @@ export default defineComponent({
     const platformListSupported = ref([]);
 
     const getPlatformList = async () => {
+      console.log('là je dois appeler !!!!!! et surtout utliser ' , url)
       const temp = await axios.get(`${url}/platformlistpublic`, {});
 
       return temp;
