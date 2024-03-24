@@ -211,7 +211,7 @@ export default defineComponent({
 
     const router = useRouter();
     //const url = `http://localhost:${process.env.GATEWAY_PORT}`;
-    url = `https://micropublic1.netlify.app/.netlify/functions/api`
+    const url = `https://micropublic1.netlify.app/.netlify/functions/api`
 
     const platformListSupported = ref([]);
 
