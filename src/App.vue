@@ -10,7 +10,7 @@ export default defineComponent({
 
 
   mounted() {
-    this.$q.dark.set(false);
+    this.$q.dark.set(true);
   },
 })
 </script>

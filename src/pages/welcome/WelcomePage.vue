@@ -63,27 +63,12 @@
     </div>
     <!-- Section pour la liste des plateformes supportées -->
     <div class="col-12 row flex flex-center">
-      <q-card class="col-xs-12 col-md-10">
-        <q-card-section class="q-pa-md">
-          <h2 class="text-h6">Plateformes supportées</h2>
-          <q-virtual-scroll
-            :items="platformListSupported"
-            virtual-scroll-horizontal
-            v-slot="{ item, index }"
-            class="flex flex-center"
-          >
-            <div :key="index" class="row items-center">
-              <q-avatar
-                v-if="item.avatar === true"
-                class="bg-black text-white q-my-md"
-              >
-                {{ index % 10 }}
-              </q-avatar>
+      <q-card class="col-xs-12 col-md-10 q-pa-md">
+        <p class="text-h5 col-12 ">Roadmap et Projets</p>
+        <q-card-section class="flex flex-center col-12 ">
 
-              <q-item v-else dense clickable>
-                <q-item-section>
-                  <q-item-label>
-                    <q-avatar
+          <div class='platformWrapper col-12  '>
+            <div v-for="item in platformListSupported" :key="item" class="item"> <q-avatar
                       rounded
                       style="border: solid 1px grey"
                       size="100px"
@@ -91,16 +76,10 @@
                       color="white"
                       text-color="white"
                     >
-                      <q-img :src="item.icon_link" style="position: relative">
+                      <q-img class="q-ma-xs" :src="item.icon_link"  style="position: relative">
                       </q-img>
-                    </q-avatar>
-                  </q-item-label>
-                </q-item-section>
-              </q-item>
-
-              <q-separator vertical spaced />
-            </div>
-          </q-virtual-scroll>
+                    </q-avatar></div>
+          </div>
         </q-card-section>
       </q-card>
     </div>
@@ -109,7 +88,8 @@
     <div class="col-12 row flex flex-center">
       <q-card class="q-mt-md col-xs-12 col-md-10">
         <q-card-section class="q-pa-md">
-          <p class="text-h6">Roadmap et Projets</p>
+
+          <p class="text-h5">Roadmap et Projets</p>
           <q-scroll-area style="height: 250px">
             <div class="row flex-center felx">
               <q-timeline :side="side" color="secondary" class="col-6">
@@ -139,30 +119,43 @@
           </q-scroll-area>
         </q-card-section>
       </q-card>
+      <div class="col-12 row flex flex-center q-mb-md ">
+      <q-card class="q-mt-md col-xs-12 col-md-10 ">
+        <q-card-section class="q-pa-md ">
+
+        </q-card-section>
+        <q-card-section class="q-pa-md  row col-12 "  >
+          <div class="col-12">
+            <p class="text-h5 ">Découvrir notre équipe</p>
+          </div>
+
+          <div class='teamWrapper col-12 flex flex-center'>
+            <div v-for="n in 5" :key="n" class="teamitem"> <q-avatar
+
+
+                      size="120px"
+                      font-size="82px"
+
+                      class="q-ma-xs"
+                    >
+                      <q-img class="q-ma-xs" size="255px" :src="`https://cdn.quasar.dev/img/avatar${n + 0}.jpg`" >
+
+                      </q-img>
+
+                    </q-avatar></div>
+          </div>
+        </q-card-section>
+
+
+
+
+
+      </q-card>
+    </div>
     </div>
 
     <!-- Section pour la roadmap et les projets -->
-    <div class="col-12 row flex flex-center q-mb-md">
-      <q-card class="q-mt-md col-xs-12 col-md-10">
-        <q-card-section class="q-pa-md">
-          <p class="text-h5">Découvrir notre équipe</p>
-          <div
-            class="q-pa-md q-gutter-sm flex flex-center"
-            style="height: 200px"
-          >
-            <q-avatar
-              v-for="n in 5"
-              :key="n"
-              size="150px"
-              class="overlapping"
-              :style="`left: ${n * 100}px`"
-            >
-              <img :src="`https://cdn.quasar.dev/img/avatar${n + 0}.jpg`" />
-            </q-avatar>
-          </div>
-        </q-card-section>
-      </q-card>
-    </div>
+
   </q-page>
 </template>
 
@@ -210,8 +203,8 @@ export default defineComponent({
     const side = ref("right");
 
     const router = useRouter();
-    //const url = `http://localhost:${process.env.GATEWAY_PORT}`;
-    const url = `https://micropublic1.netlify.app/.netlify/functions/api`
+    const url = `http://localhost:${process.env.GATEWAY_PORT}`;
+    //const url = `https://micropublic1.netlify.app/.netlify/functions/api`
 
     const platformListSupported = ref([]);
 
@@ -249,6 +242,29 @@ export default defineComponent({
   background-color: rgba(0, 0, 0, .5)
 
 .overlapping
-  border: 2px solid white
+  border: 1px solid white
   position: absolute
+
+
+.platformWrapper
+
+  display : flex
+  overflow-x : auto
+  overflow-y : hidden
+
+
+
+
+.platformWrapper .item
+  text-align : center
+  margin-left : 2px
+  margin-right : 2px
+
+
+
+
+
+
 </style>
+
+
