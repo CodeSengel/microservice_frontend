@@ -203,8 +203,8 @@ export default defineComponent({
     const side = ref("right");
 
     const router = useRouter();
-    const url = `http://localhost:${process.env.GATEWAY_PORT}`;
-    //const url = `https://micropublic1.netlify.app/.netlify/functions/api`
+    //const url = `http://localhost:${process.env.GATEWAY_PORT}`;
+    const url = `https://micropublic1.netlify.app/.netlify/functions/api`
 
     const platformListSupported = ref([]);
 
