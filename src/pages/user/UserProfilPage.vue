@@ -12,7 +12,8 @@ export default defineComponent({
 
   setup() {
     const router = useRouter();
-    const url = `http://localhost:${process.env.GATEWAY_PORT}`;
+    //const url = `http://localhost:${process.env.GATEWAY_PORT}`;
+    const url = process.env.GATEWAY_URL;
     const isLoggedIn = ref(false);
     let accessToken = null;
     let refreshToken = null;
