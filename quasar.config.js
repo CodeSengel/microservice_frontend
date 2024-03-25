@@ -66,7 +66,7 @@ module.exports = configure(function (ctx) {
 
     build: {
       vueRouterMode: 'history', // available values: 'hash', 'history'
-      env: {FRONTEND_PORT: process.env.FRONTEND_PORT, GATEWAY_PORT : process.env.GATEWAY_PORT} ,// Charge les variables d'environnement du fichier .env
+      env: {FRONTEND_PORT: process.env.FRONTEND_PORT, GATEWAY_PORT : process.env.GATEWAY_PORT, GATEWAY_URL : process.env.GATEWAY_URL} ,// Charge les variables d'environnement du fichier .env
 
       // transpile: false,
       // publicPath: '/',
