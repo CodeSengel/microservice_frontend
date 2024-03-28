@@ -1,12 +1,9 @@
 <template>
-
-
-
   <q-layout view="hHh Lpr lFf">
     <q-header elevated>
       <q-toolbar>
         <q-btn
-        v-if="!$q.screen.gt.sm"
+          v-if="!$q.screen.gt.sm"
           flat
           dense
           round
@@ -15,63 +12,44 @@
           @click="drawer = !drawer"
         />
 
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
+        <q-toolbar-title> Quasar App </q-toolbar-title>
 
         <div>Quasar v{{ $q.version }}</div>
       </q-toolbar>
     </q-header>
 
     <q-drawer
-    v-model="drawer"
-        show-if-above
-
-        :mini="miniState"
-        @mouseover="miniState = false"
-        @mouseout="miniState = true"
-        mini-to-overlay
-
-        :width="300"
-        :breakpoint="500"
-        bordered
-        :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'"
+      v-model="drawer"
+      show-if-above
+      :mini="miniState"
+      @mouseover="miniState = false"
+      @mouseout="miniState = true"
+      mini-to-overlay
+      :width="300"
+      :breakpoint="500"
+      bordered
+      :class="$q.dark.isActive ? 'bg-grey-9' : 'bg-grey-3'"
     >
       <q-list>
-
-
         <EssentialLink
-        clickable
-          v-for="(link) in essentialSections"
+          clickable
+          v-for="link in essentialSections"
           :key="link.title"
           v-bind="link"
           :active="link.to.name === selectedSection"
-
           @click="updateSelectedSection(link.to.name)"
-
         />
         <q-separator></q-separator>
-
 
         <EssentialLink
           v-for="link in essentialLinks"
           :key="link.title"
           v-bind="link"
           :href="link.to"
-
-
         />
         <q-separator></q-separator>
-        <q-item
-          clickable
-          tag="a"
-          target=""
-          href="login"
-          @click="logout()"
-        >
-          <q-item-section
-            avatar
-          >
+        <q-item clickable tag="a" target="" href="login" @click="logout()">
+          <q-item-section avatar>
             <q-icon name="logout" />
           </q-item-section>
 
@@ -81,152 +59,139 @@
           </q-item-section>
         </q-item>
       </q-list>
-
     </q-drawer>
     <q-page-container>
       <router-view />
     </q-page-container>
   </q-layout>
-
-
-
-
-
 </template>
 
 <script>
-import { defineComponent, ref , onMounted} from 'vue'
-import EssentialLink from 'components/EssentialLink.vue'
+import { defineComponent, ref, onMounted } from "vue";
+import EssentialLink from "components/EssentialLink.vue";
 import useNotify from "src/composables/UseNotify";
 import { useRouter } from "vue-router";
-import axios from 'axios';
-
+import axios from "axios";
 
 export default defineComponent({
-  name: 'MainLayout',
+  name: "MainLayout",
 
   components: {
-    EssentialLink
+    EssentialLink,
   },
 
-  setup () {
-
-
-
-    const selectedSection = ref()
+  setup() {
+    const selectedSection = ref();
 
     let essentialSections = [
-    {
-    title: 'Home',
-    caption: 'Home',
-    icon: 'mdi-home',
-    to: { name: 'welcome' },
-    target:'',
+      {
+        title: "Home",
+        caption: "Home",
+        icon: "mdi-home",
+        to: { name: "welcome" },
+        target: "",
+      },
 
-  },
+      {
+        title: "Profil",
+        caption: "Your profil",
+        icon: "mdi-account",
+        to: { name: "userprofil" },
+        target: "",
+      },
+      {
+        title: "Platforms",
+        caption: "Your list of connected platforms",
+        icon: "list",
+        to: { name: "userplatformlist" },
+        target: "",
+      },
+      {
+        title: "Portfolio",
+        caption: "Your portfolio",
+        icon: "mdi-wallet",
+        to: { name: "userportfolio" },
+        target: "",
+      },
+    ];
 
-  {
-    title: 'Profil',
-    caption: 'Your profil',
-    icon: 'mdi-account',
-    to: { name: 'userprofil' },
-    target:'',
-
-  },{
-    title: 'Portfolio',
-    caption: 'Your portfolio',
-    icon: 'mdi-wallet',
-     to: { name: 'userportfolio' },
-    target:'',
-
-  },]
-
-let essentialLinks = [
-
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev',
-    target:'_blank'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev',
-    target:'_blank'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev',
-    target:'_blank'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev',
-    target:'_blank'
-  }
-]
+    let essentialLinks = [
+      {
+        title: "Discord Chat Channel",
+        caption: "chat.quasar.dev",
+        icon: "chat",
+        link: "https://chat.quasar.dev",
+        target: "_blank",
+      },
+      {
+        title: "Forum",
+        caption: "forum.quasar.dev",
+        icon: "record_voice_over",
+        link: "https://forum.quasar.dev",
+        target: "_blank",
+      },
+      {
+        title: "Twitter",
+        caption: "@quasarframework",
+        icon: "rss_feed",
+        link: "https://twitter.quasar.dev",
+        target: "_blank",
+      },
+      {
+        title: "Facebook",
+        caption: "@QuasarFramework",
+        icon: "public",
+        link: "https://facebook.quasar.dev",
+        target: "_blank",
+      },
+    ];
 
     const { notifyError, notifySuccess } = useNotify();
 
-
-    const drawer = ref(false)
-    const miniState = ref(true)
+    const drawer = ref(false);
+    const miniState = ref(true);
 
     const router = useRouter();
-    const url = `http://localhost:${ process.env.GATEWAY_PORT}`
-    const isLoggedIn = ref(false)
-
+    const url = `http://localhost:${process.env.GATEWAY_PORT}`;
+    const isLoggedIn = ref(false);
 
     // Fonction pour définir un cookie
 
-function deleteCookie(name) {
-    document.cookie = `${name}=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax`;
-}
-
+    function deleteCookie(name) {
+      document.cookie = `${name}=; Path=/; Expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Lax`;
+    }
 
     const logout = async () => {
-      deleteCookie('my-access-token');
-      deleteCookie('my-refresh-token');
-      await axios.get(`${url}/logout`)
-
-    }
+      deleteCookie("my-access-token");
+      deleteCookie("my-refresh-token");
+      await axios.get(`${url}/logout`);
+    };
 
     const updateSelectedSection = (item) => {
-      selectedSection.value = item
-    }
+      selectedSection.value = item;
+    };
 
     onMounted(async () => {
-      selectedSection.value =  router.currentRoute.value.name;
+      selectedSection.value = router.currentRoute.value.name;
 
-      isLoggedIn.value = await axios.get(`${url}/isloggedin`)
-      console.log(isLoggedIn.value)
+      isLoggedIn.value = await axios.get(`${url}/isloggedin`);
+      console.log(isLoggedIn.value);
       if (!isLoggedIn.value) {
         router.push({ name: "login" });
       }
     });
 
-
-
     return {
       essentialLinks,
-      essentialSections ,
+      essentialSections,
 
       drawer,
       logout,
       selectedSection,
       updateSelectedSection,
 
-
-      miniState
-
-    }
-  }
-})
+      miniState,
+    };
+  },
+});
 </script>

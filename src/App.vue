@@ -3,14 +3,13 @@
 </template>
 
 <script>
-import { defineComponent, mounted } from 'vue'
+import { defineComponent, mounted } from "vue";
 
 export default defineComponent({
-  name: 'App',
-
+  name: "App",
 
   mounted() {
-    this.$q.dark.set(true);
+    this.$q.dark.set(false);
   },
-})
+});
 </script>

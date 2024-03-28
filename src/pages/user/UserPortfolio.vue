@@ -38,12 +38,13 @@ export default defineComponent({
     };
 
     const getPlatformList = async () => {
+      /*
       const temp = await axios.get(`${url}/platformlist`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
           RefreshToken: refreshToken,
         },
-      });
+      });*/
 
       return temp;
     };

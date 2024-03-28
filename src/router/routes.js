@@ -14,6 +14,11 @@ const routes = [
         component: () => import("pages/user/UserProfilPage.vue"),
       },
       {
+        path: "/userplatformlist",
+        name: "userplatformlist",
+        component: () => import("pages/user/UserPlatformList.vue"),
+      },
+      {
         path: "/userportfolio",
         name: "userportfolio",
         component: () => import("pages/user/UserPortfolio.vue"),
@@ -24,7 +29,6 @@ const routes = [
     path: "/auth",
     component: () => import("layouts/AuthLayout.vue"),
     children: [
-
       {
         path: "/login",
         name: "login",
@@ -45,9 +49,9 @@ const routes = [
   // Always leave this as last one,
   // but you can also remove it
   {
-    path: '/:catchAll(.*)*',
-    component: () => import('pages/ErrorNotFound.vue')
-  }
+    path: "/:catchAll(.*)*",
+    component: () => import("pages/ErrorNotFound.vue"),
+  },
 ];
 
 export default routes;

@@ -64,21 +64,26 @@
     <!-- Section pour la liste des plateformes supportées -->
     <div class="col-12 row flex flex-center">
       <q-card class="col-xs-12 col-md-10 q-pa-md">
-        <p class="text-h5 col-12 ">Roadmap et Projets</p>
-        <q-card-section class="flex flex-center col-12 ">
-
-          <div class='platformWrapper col-12  '>
-            <div v-for="item in platformListSupported" :key="item" class="item"> <q-avatar
-                      rounded
-                      style="border: solid 1px grey"
-                      size="100px"
-                      font-size="82px"
-                      color="white"
-                      text-color="white"
-                    >
-                      <q-img class="q-ma-xs" :src="item.icon_link"  style="position: relative">
-                      </q-img>
-                    </q-avatar></div>
+        <p class="text-h5 col-12">Roadmap et Projets</p>
+        <q-card-section class="flex flex-center col-12">
+          <div class="platformWrapper col-12">
+            <div v-for="item in platformListSupported" :key="item" class="item">
+              <q-avatar
+                rounded
+                style="border: solid 1px grey"
+                size="100px"
+                font-size="82px"
+                color="white"
+                text-color="white"
+              >
+                <q-img
+                  class="q-ma-xs"
+                  :src="item.icon_link"
+                  style="position: relative"
+                >
+                </q-img>
+              </q-avatar>
+            </div>
           </div>
         </q-card-section>
       </q-card>
@@ -88,7 +93,6 @@
     <div class="col-12 row flex flex-center">
       <q-card class="q-mt-md col-xs-12 col-md-10">
         <q-card-section class="q-pa-md">
-
           <p class="text-h5">Roadmap et Projets</p>
           <q-scroll-area style="height: 250px">
             <div class="row flex-center felx">
@@ -119,43 +123,32 @@
           </q-scroll-area>
         </q-card-section>
       </q-card>
-      <div class="col-12 row flex flex-center q-mb-md ">
-      <q-card class="q-mt-md col-xs-12 col-md-10 ">
-        <q-card-section class="q-pa-md ">
+      <div class="col-12 row flex flex-center q-mb-md">
+        <q-card class="q-mt-md col-xs-12 col-md-10">
+          <q-card-section class="q-pa-md"> </q-card-section>
+          <q-card-section class="q-pa-md row col-12">
+            <div class="col-12">
+              <p class="text-h5">Découvrir notre équipe</p>
+            </div>
 
-        </q-card-section>
-        <q-card-section class="q-pa-md  row col-12 "  >
-          <div class="col-12">
-            <p class="text-h5 ">Découvrir notre équipe</p>
-          </div>
-
-          <div class='teamWrapper col-12 flex flex-center'>
-            <div v-for="n in 5" :key="n" class="teamitem"> <q-avatar
-
-
-                      size="120px"
-                      font-size="82px"
-
-                      class="q-ma-xs"
-                    >
-                      <q-img class="q-ma-xs" size="255px" :src="`https://cdn.quasar.dev/img/avatar${n + 0}.jpg`" >
-
-                      </q-img>
-
-                    </q-avatar></div>
-          </div>
-        </q-card-section>
-
-
-
-
-
-      </q-card>
-    </div>
+            <div class="teamWrapper col-12 flex flex-center">
+              <div v-for="n in 5" :key="n" class="teamitem">
+                <q-avatar size="120px" font-size="82px" class="q-ma-xs">
+                  <q-img
+                    class="q-ma-xs"
+                    size="255px"
+                    :src="`https://cdn.quasar.dev/img/avatar${n + 0}.jpg`"
+                  >
+                  </q-img>
+                </q-avatar>
+              </div>
+            </div>
+          </q-card-section>
+        </q-card>
+      </div>
     </div>
 
     <!-- Section pour la roadmap et les projets -->
-
   </q-page>
 </template>
 
@@ -203,14 +196,14 @@ export default defineComponent({
     const side = ref("right");
 
     const router = useRouter();
-    const url = process.env.GATEWAY_URL
+    const url = process.env.GATEWAY_URL;
     //const url = `http://localhost:${process.env.GATEWAY_PORT}`;
     //const url = `https://micropublic1.netlify.app/.netlify/functions/api`
 
     const platformListSupported = ref([]);
 
     const getPlatformList = async () => {
-      console.log('là je dois appeler !!!!!! et surtout utliser ' , url)
+      console.log("là je dois appeler !!!!!! et surtout utliser ", url);
       const temp = await axios.get(`${url}/platformlistpublic`, {});
 
       return temp;
@@ -260,12 +253,4 @@ export default defineComponent({
   text-align : center
   margin-left : 2px
   margin-right : 2px
-
-
-
-
-
-
 </style>
-
-
