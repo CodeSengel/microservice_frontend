@@ -26,6 +26,9 @@
           class="justify-center col-2 q-mr-xs"
           v-for="item in myPublicKeyList"
           :key="item"
+          :color="
+            platformNotReadyYet.includes(item.platform) ? 'grey' : 'primary'
+          "
         >
           <div v-for="i in platformListSupported[0]" :key="i">
             <div v-for="k in i" :key="k">
@@ -38,9 +41,14 @@
                 font-size="82px"
               >
                 <q-img
-                  class="q-ma-xs zoomed-image"
+                  class="q-ma-xs"
                   :src="k.icon_link"
                   style="position: relative"
+                  :class="
+                    platformNotReadyYet.includes(item.platform)
+                      ? 'image-notready'
+                      : 'zoomed-image'
+                  "
                 >
                 </q-img>
               </q-avatar>
@@ -49,9 +57,62 @@
           <div class="q-ml-xs">{{ item.name }}</div>
         </q-badge>
       </div>
+      <div v-if="dataFromConnectedPlatformAggregated.BITPANDA">
+        <p class="text-h6">FIAT</p>
+        <p>
+          Vous avez injecté :
+          {{
+            dataFromConnectedPlatformAggregated.BITPANDA.data.message.fiatData
+              .deposit.total
+          }}
+          €
+        </p>
+        <p>
+          Vous avez retiré :
+          {{
+            dataFromConnectedPlatformAggregated.BITPANDA.data.message.fiatData
+              .withdrawal.total
+          }}
+          €
+        </p>
+
+        <p class="text-h6">Crypto</p>
+
+        <div
+          v-for="(value, key) in dataFromConnectedPlatformAggregated.BITPANDA
+            .data.message.cryptoData"
+          :key="key"
+        >
+          <p class="col-12 bg-red text-center">
+            {{ key }}
+          </p>
+          <div v-if="value.buyList">
+            buy : {{ value.buyList.buy.total }} invest :
+            {{ value.buyList.buy.invest }}
+            average price :
+            {{ value.buyList.buy.averageprice }}
+          </div>
+          <q-separator></q-separator>
+          <div v-if="value.sellList">
+            sell : {{ value.sellList.sell.total }} recipe :
+            {{ value.sellList.sell.recipe }}
+            average price :
+            {{ value.sellList.sell.averageprice }}
+          </div>
+          <q-separator></q-separator>
+          <div v-if="value.transferList">
+            staked : {{ value.transferList.transfert.stakedAmount }}
+          </div>
+          <div v-if="value.withdrawalList">
+            withdrawal : {{ value.withdrawalList.withdrawal.total }} fee :
+            {{ value.withdrawalList.withdrawal.fee }}
+          </div>
+        </div>
+        : {{ value }}
+      </div>
+
+      {{ dataFromConnectedPlatformAggregated }}
     </div>
-    UserPortfolio {{ myPublicKeyList }} sss
-    {{ platformListSupported[0] }}
   </q-page>
 </template>
 
@@ -65,7 +126,9 @@ export default defineComponent({
   name: "UserPortfolio",
 
   setup() {
+    const platformNotReadyYet = ["BINANCE", "MEXC"];
     const dataFromConnectedPlatform = ref({});
+    const dataFromConnectedPlatformAggregated = ref({});
     const report = ref([]);
     const { getCollectionData } = saveKey();
     const myPublicKeyList = ref([]);
@@ -113,11 +176,15 @@ export default defineComponent({
       }
     };
 
-    const getDataFromConnectedPlatform = () => {
+    const aggregator = async (item) => {
+      dataFromConnectedPlatformAggregated.value = item.value;
+    };
+    const getDataFromConnectedPlatform = async () => {
       console.log(
         "je dois du coup récupére des données des platform connectées",
         myPublicKeyList.value.length
       );
+      report.value = [];
 
       myPublicKeyList.value.forEach(async (element) => {
         if (element.platform != "BITPANDA") {
@@ -147,6 +214,8 @@ export default defineComponent({
             " ne fournit pas de détail sur vos staking, merci de rajouter l'historique manuellement"
           );
         }
+
+        await aggregator(dataFromConnectedPlatform);
       });
     };
 
@@ -174,6 +243,8 @@ export default defineComponent({
       platformListSupported,
       getDataFromConnectedPlatform,
       report,
+      platformNotReadyYet,
+      dataFromConnectedPlatformAggregated,
     };
   },
 });
@@ -182,5 +253,10 @@ export default defineComponent({
 <style>
 .zoomed-image {
   transform: scale(1.3); /* Ajustez la valeur de l'échelle selon vos besoins */
+}
+
+.image-notready {
+  transform: scale(1.3); /* Ajustez la valeur de l'échelle selon vos besoins */
+  filter: grayscale(100%);
 }
 </style>
