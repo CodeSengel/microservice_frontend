@@ -70,6 +70,28 @@
                         />
                       </template>
                     </q-input>
+                    <q-input
+                      v-if="newPublicKey.platform == 'BINANCE'"
+                      v-model="newPublicKey.secretKey"
+                      outlined
+                      label="Secret key"
+                      :type="isPwd ? 'password' : 'text'"
+                      dense
+                      clearable
+                      lazy-rules
+                      :rules="[
+                        (val) => (val && val.length > 0) || 'Name is required',
+                      ]"
+                    >
+                      <template v-slot:append>
+                        <q-icon
+                          :name="isPwd ? 'visibility_off' : 'visibility'"
+                          class="cursor-pointer"
+                          @click="isPwd = !isPwd"
+                        />
+                      </template>
+                    </q-input>
+
                     <div class="justify-end row">
                       <q-btn
                         :disable="
@@ -106,31 +128,54 @@
               v-for="item in myPublicKeyList"
               :key="item"
             >
-              <q-item clickable v-ripple>
-                <q-item-section avatar top>
-                  <div v-for="i in platformListSupported.data.data" :key="i">
-                    <q-avatar
-                      v-if="i.label == item.platform"
-                      color="white"
-                      text-color="white"
-                      size="100px"
-                      font-size="82px"
-                    >
-                      <q-img
-                        class="q-ma-xs"
-                        :src="i.icon_link"
-                        style="position: relative"
+              <q-item>
+                <div class="row col-10">
+                  <q-item-section avatar top>
+                    <div v-for="i in platformListSupported.data.data" :key="i">
+                      <q-avatar
+                        v-if="i.label == item.platform"
+                        color="white"
+                        style="border: 2px solid black"
+                        text-color="white"
+                        size="100px"
+                        font-size="82px"
                       >
-                      </q-img>
-                    </q-avatar>
-                  </div>
-                </q-item-section>
-                <q-item-section>
-                  <q-item-label lines="1">{{ item.name }}</q-item-label>
-                  <q-item-label caption>
-                    created : {{ item.created_at }}</q-item-label
-                  >
-                </q-item-section>
+                        <q-img
+                          class="q-ma-xs zoomed"
+                          :src="i.icon_link"
+                          style="position: relative"
+                        >
+                        </q-img>
+                      </q-avatar>
+                    </div>
+                  </q-item-section>
+
+                  <q-item-section class="col-5">
+                    <q-item-label lines="1">{{ item.name }}</q-item-label>
+                    <q-item-label caption>
+                      created : {{ item.created_at }}</q-item-label
+                    >
+                  </q-item-section>
+                </div>
+                <div class="col-2">
+                  <q-item-section class="col-2 row justify-end">
+                    <q-btn
+                      @click="setKeyConnexion(item)"
+                      dense
+                      :class="item.connected ? 'notanimated' : 'animated'"
+                    >
+                      <q-icon
+                        color="black"
+                        size="20px"
+                        :name="
+                          item.connected
+                            ? 'mdi-transit-connection-horizontal'
+                            : 'mdi-connection'
+                        "
+                      />
+                    </q-btn>
+                  </q-item-section>
+                </div>
               </q-item>
               <div class="col-12 row">
                 <div v-if="hidekey.name != item.name" class="col-10 row">
@@ -199,6 +244,7 @@ import { useQuasar } from "quasar";
 //import Localbase from "localbase";
 
 import saveKey from "src/composables/SaveKey";
+
 import useNotify from "src/composables/UseNotify";
 
 export default defineComponent({
@@ -214,6 +260,7 @@ export default defineComponent({
       getCollectionData,
       addObjectIfNotExists,
       deleteDocsByKeyValue,
+      updateValue,
     } = saveKey();
     const url = process.env.GATEWAY_URL;
     const isLoggedIn = ref(false);
@@ -232,6 +279,9 @@ export default defineComponent({
       name: "",
       platform: "",
       key: "",
+      secretKey: "",
+      icon_link: "",
+      connected: false,
       created_at: "",
     });
 
@@ -287,6 +337,7 @@ export default defineComponent({
     };
     const saveNewKey = async () => {
       console.log("je vais sauvegrader", newPublicKey);
+
       newPublicKey.value.created_at = new Date();
       const temp = await addObjectIfNotExists(
         "Key_List",
@@ -298,12 +349,14 @@ export default defineComponent({
       if (temp) {
         console.log("je nettoie tout");
         notifySuccess("la nouvelle clé a été créée avec succès");
-        myPublicKeyList.value = await getCollectionData("Key_List");
+        getMyPlatformList();
         dialogForNewKeyCreation.value = false;
         newPublicKey.value = {
           name: "",
           platform: "",
           key: "",
+          secretKey: "",
+          icon_link: "",
           created_at: "",
         };
       } else {
@@ -339,14 +392,14 @@ export default defineComponent({
 
           if (temp) {
             notifySuccess("l element a été bien supprimé");
-            myPublicKeyList.value = await getCollectionData("Key_List");
+            getMyPlatformList();
             console.log(
               "Après suppression, myPublicKeyList.value: ",
               myPublicKeyList.value
             );
           } else {
             notifyError("l element ne peut pas etre supprimé");
-            myPublicKeyList.value = await getCollectionData("Key_List");
+            getMyPlatformList();
           }
         })
         .onCancel(() => {
@@ -355,6 +408,11 @@ export default defineComponent({
         .onDismiss(() => {
           // console.log('I am triggered on both OK and Cancel')
         });
+    };
+
+    const getMyPlatformList = async () => {
+      //myPublicKeyList.value = [];
+      myPublicKeyList.value = await getCollectionData("Key_List");
     };
     onMounted(async () => {
       // check user connexion
@@ -371,8 +429,6 @@ export default defineComponent({
 
           platformSupportedOption.value.push(element.label);
         });
-        console.log(platformListSupportedArrayForm);
-        //await resetDb();
 
         await checkCollectionfunction(
           // check if the user has already a local db for his data
@@ -384,9 +440,22 @@ export default defineComponent({
           "Key_List"
         );
 
-        myPublicKeyList.value = await getCollectionData("Key_List");
+        getMyPlatformList();
       }
     });
+
+    const setKeyConnexion = async (item) => {
+      const temp = await updateValue(
+        "Key_List",
+        { key: item.key },
+        { connected: !item.connected }
+      );
+
+      console.log("Puis ça 2");
+
+      // Appeler getMyPlatformList() après la mise à jour de la valeur
+      await getMyPlatformList();
+    };
 
     return {
       platformListSupported,
@@ -401,7 +470,33 @@ export default defineComponent({
       formatDate,
       hidekeyFunc,
       deletKeyFunc,
+      setKeyConnexion,
     };
   },
 });
 </script>
+
+<style>
+.animated {
+  animation: color-variation 1.5s infinite;
+}
+
+@keyframes color-variation {
+  0% {
+    background-color: rgb(211, 59, 59); /* Couleur initiale */
+    background-position: left; /* Position initiale */
+  }
+  100% {
+    background-color: rgb(255, 255, 255); /* Couleur finale */
+    background-position: right; /* Position finale */
+  }
+}
+
+.notanimated {
+  background-color: rgb(0, 255, 13);
+}
+
+.zoomed {
+  transform: scale(1.2); /* Ajustez la valeur de l'échelle selon vos besoins */
+}
+</style>

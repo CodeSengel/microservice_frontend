@@ -153,12 +153,14 @@
 </template>
 
 <script>
-import { defineComponent, ref, onMounted } from "vue";
+import { defineComponent, ref, onMounted, Vue } from "vue";
 import { useRouter } from "vue-router";
 import axios from "axios";
 
 export default defineComponent({
   name: "WelcomePage",
+
+  components: {},
 
   setup() {
     // Info général :

@@ -76,15 +76,22 @@ export default function saveKey() {
       });
   }
 
-  async function getCollectionData(collectionName) {
+  async function getCollectionData(collectionName, filter) {
     // Get all documents from the collection
     const docs = await db.collection(collectionName).get();
 
+    // Filter the documents if a filter is provided
+    const filteredDocs = filter
+      ? docs.filter((doc) =>
+          Object.keys(filter).every((key) => doc[key] === filter[key])
+        )
+      : docs;
+
     // Add the database key to each document
-    const data = docs.map((doc) => {
+    const data = filteredDocs.map((doc) => {
       return {
         ...doc,
-        key_db: doc.key,
+        //key_db: doc.key,
       };
     });
 
@@ -114,11 +121,26 @@ export default function saveKey() {
     }
   }
 
+  async function updateValue(collectionname, keyValueId, KeyValueNew) {
+    return new Promise((resolve, reject) => {
+      db.collection(collectionname)
+        .doc(keyValueId)
+        .update(KeyValueNew)
+        .then(() => {
+          resolve(true); // Résoudre la promesse avec true lorsque la mise à jour est terminée
+        })
+        .catch((error) => {
+          reject(error); // Rejeter la promesse avec l'erreur si une erreur se produit
+        });
+    });
+  }
+
   return {
     checkCollectionfunction,
     resetDb,
     getCollectionData,
     addObjectIfNotExists,
     deleteDocsByKeyValue,
+    updateValue,
   };
 }
